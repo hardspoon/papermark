@@ -1,0 +1,32 @@
+[build]
+builder = "nixpacks"
+buildCommand = "npm run vercel-build"
+
+[deploy]
+startCommand = "npm start"
+healthcheckPath = "/"
+healthcheckTimeout = 100
+restartPolicyType = "on_failure"
+
+[deploy.envs]
+NODE_ENV = "production"
+NEXTAUTH_SECRET = "98ac9fb03261e7ec3cfcdaaddb1251bf0da56a596c97dbe34c3c3a0d4346dc47"
+NEXTAUTH_URL = "${RAILWAY_PUBLIC_DOMAIN}"
+NEXT_PUBLIC_BASE_URL = "${RAILWAY_PUBLIC_DOMAIN}"
+NEXT_PUBLIC_MARKETING_URL = "${RAILWAY_PUBLIC_DOMAIN}"
+
+[[plugins]]
+name = "postgresql"
+version = "15.0"
+
+[plugins.postgresql.envs]
+POSTGRES_PRISMA_URL = "${POSTGRESQL_URL}?sslmode=require&connection_limit=5"
+POSTGRES_PRISMA_URL_NON_POOLING = "${POSTGRESQL_URL}?sslmode=require&connection_limit=1"
+
+[[plugins]]
+name = "redis"
+version = "7.0"
+
+[plugins.redis.envs]
+UPSTASH_REDIS_REST_LOCKER_URL = "${REDIS_URL}"
+UPSTASH_REDIS_REST_LOCKER_TOKEN = "${REDIS_PASSWORD}"
